@@ -10,6 +10,7 @@ services:
     volumes:
       - ./fe:/app
       - /app/node_modules
+
   backend:
     build:
       context: ./api
@@ -19,3 +20,16 @@ services:
     volumes:
       - ./api:/app
       - /app/node_modules
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: mongo
+    volumes:
+      - .mongodb:/data:rw
+
+volumes:
+  .mongodb:
+    external: false
