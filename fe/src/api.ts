@@ -1,6 +1,6 @@
 export const getAllDashboards = async (): Promise<
   {
-    id: string;
+    _id: string;
     color: string;
     positions: [number, number][];
   }[]

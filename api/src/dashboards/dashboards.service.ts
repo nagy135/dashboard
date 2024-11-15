@@ -16,9 +16,13 @@ export class DashboardsService {
   async create() {
     return this.dashboardModel.create({
       positions: [
-        [6, 0],
-        [6, 1],
-        [6, 2],
+        [2, 2],
+        [2, 3],
+        [2, 1],
+
+        [4, 2],
+        [4, 3],
+        [4, 1],
       ],
       color: 'red',
     });

@@ -3,18 +3,18 @@
 import { getAllDashboards } from "@/api";
 import { cn } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 type Position = [number, number];
 type Item = {
-  id: string;
+  _id: string;
   color: string;
   positions: Position[];
 };
 
 const compileData = (
   items: Item[],
-): { rowSpan: number; colSpan: number; id?: string; color: string }[] => {
+): { rowSpan: number; colSpan: number; _id?: string; color: string }[] => {
   const indexes: (number | string | undefined)[][] = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -31,14 +31,14 @@ const compileData = (
   for (const item of items) {
     for (const position of item.positions) {
       const [x, y] = position;
-      indexes[y][x] = item.id;
-      idToColor.set(item.id, item.color);
+      indexes[y][x] = item._id;
+      idToColor.set(item._id, item.color);
     }
   }
   const result: {
     rowSpan: number;
     colSpan: number;
-    id?: string;
+    _id?: string;
     color: string;
   }[] = [];
   for (let y = 0; y < indexes.length; y++) {
@@ -62,7 +62,7 @@ const compileData = (
         }
 
         result.push({
-          ...items.find((item) => item.id === current)!,
+          ...items.find((item) => item._id === current)!,
           rowSpan,
           colSpan,
         });
@@ -87,12 +87,22 @@ export default function Grid() {
     queryKey: ["dashboards"],
     queryFn: getAllDashboards,
   });
+  console.log(
+    "================\n",
+    "dashboardQuery: ",
+    dashboardQuery.data,
+    "\n================",
+  );
 
   const [items, setItems] = useState<Item[]>(dashboardQuery.data ?? []);
 
   const compiledData = useCallback(() => compileData(items ?? []), [items]);
 
-  if (!dashboardQuery.data) return null;
+  useEffect(() => {
+    setItems(dashboardQuery.data ?? []);
+  }, [dashboardQuery.data]);
+
+  console.log(compiledData().map((e) => e.color));
 
   return (
     <div
@@ -114,12 +124,12 @@ export default function Grid() {
         const clickedOnItem = items.find((item) =>
           item.positions.find((p) => p[0] === col && p[1] === row),
         );
-        if (clickedOnItem) setPickedId(clickedOnItem.id);
+        if (clickedOnItem) setPickedId(clickedOnItem._id);
         else {
           setItems((items) => {
             const newItems = [...items];
             newItems.map((e) => {
-              if (e.id === pickedId) {
+              if (e._id === pickedId) {
                 e.positions.push([col, row]);
               }
             });
@@ -130,17 +140,15 @@ export default function Grid() {
     >
       {compiledData().map((item, i) => (
         <div
-          key={`${item.id} - ${i}`}
+          key={`${item._id} - ${i}`}
           style={{
             gridColumn: `span ${item.colSpan} / span ${item.colSpan}`,
             gridRow: `span ${item.rowSpan} / span ${item.rowSpan}`,
+            backgroundColor: item.color,
           }}
-          className={cn(
-            "rounded-lg text-center pointer-events-none",
-            item.color,
-          )}
+          className={cn("rounded-lg text-center pointer-events-none")}
         >
-          {item.id}
+          {item._id}
         </div>
       ))}
     </div>
