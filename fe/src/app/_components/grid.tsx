@@ -1,7 +1,9 @@
 "use client";
 
+import { getAllDashboards } from "@/api";
 import { cn } from "@/utils";
-import React, { useCallback, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import React, { useCallback, useState } from "react";
 
 type Position = [number, number];
 type Item = {
@@ -81,39 +83,17 @@ const compileData = (
 
 export default function Grid() {
   const [pickedId, setPickedId] = useState<string | undefined>(undefined);
-  const [items, setItems] = useState<Item[]>([
-    {
-      id: "1",
-      positions: [
-        [0, 0],
-        [0, 1],
-        [0, 2],
-        [2, 0],
-        [3, 0],
-        [2, 1],
-        [3, 1],
-      ],
-      color: "bg-red-400",
-    },
-    {
-      id: "2",
-      positions: [
-        [1, 2],
-        [2, 2],
-        [3, 2],
-      ],
-      color: "bg-blue-400",
-    },
-    {
-      id: "3",
-      positions: [
-        [1, 0],
-        [1, 1],
-      ],
-      color: "bg-green-400",
-    },
-  ]);
-  const compiledData = useCallback(() => compileData(items), [items]);
+  const dashboardQuery = useQuery({
+    queryKey: ["dashboards"],
+    queryFn: getAllDashboards,
+  });
+
+  const [items, setItems] = useState<Item[]>(dashboardQuery.data ?? []);
+
+  const compiledData = useCallback(() => compileData(items ?? []), [items]);
+
+  if (!dashboardQuery.data) return null;
+
   return (
     <div
       className="p-2 grid grid-cols-10 grid-rows-10 gap-2 h-screen w-screen"
