@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./fe
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./fe:/app
+      - /app/node_modules
+  backend:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "8080:3000"
+    volumes:
+      - ./api:/app
+      - /app/node_modules
