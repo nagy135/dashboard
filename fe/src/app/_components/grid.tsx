@@ -7,14 +7,15 @@ import React, { useCallback, useEffect, useState } from "react";
 
 type Position = [number, number];
 type Item = {
-  _id: string;
+  name: string;
+  url: string;
   color: string;
   positions: Position[];
 };
 
 const compileData = (
   items: Item[],
-): { rowSpan: number; colSpan: number; _id?: string; color: string }[] => {
+): { rowSpan: number; colSpan: number; name?: string; color: string }[] => {
   const indexes: (number | string | undefined)[][] = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -27,12 +28,10 @@ const compileData = (
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
-  const idToColor: Map<string, string> = new Map();
   for (const item of items) {
     for (const position of item.positions) {
       const [x, y] = position;
-      indexes[y][x] = item._id;
-      idToColor.set(item._id, item.color);
+      indexes[y][x] = item.name;
     }
   }
   const result: {
@@ -62,7 +61,7 @@ const compileData = (
         }
 
         result.push({
-          ...items.find((item) => item._id === current)!,
+          ...items.find((item) => item.name === current)!,
           rowSpan,
           colSpan,
         });
@@ -82,27 +81,21 @@ const compileData = (
 };
 
 export default function Grid() {
-  const [pickedId, setPickedId] = useState<string | undefined>(undefined);
+  const [pickedName, setPickedId] = useState<string | undefined>(undefined);
   const dashboardQuery = useQuery({
     queryKey: ["dashboards"],
     queryFn: getAllDashboards,
   });
-  console.log(
-    "================\n",
-    "dashboardQuery: ",
-    dashboardQuery.data,
-    "\n================",
-  );
 
-  const [items, setItems] = useState<Item[]>(dashboardQuery.data ?? []);
+  const queryItems = dashboardQuery.data?.[0]?.items ?? [];
+
+  const [items, setItems] = useState<Item[]>(queryItems as Item[]);
 
   const compiledData = useCallback(() => compileData(items ?? []), [items]);
 
   useEffect(() => {
-    setItems(dashboardQuery.data ?? []);
+    setItems((dashboardQuery.data?.[0]?.items ?? []) as Item[]);
   }, [dashboardQuery.data]);
-
-  console.log(compiledData().map((e) => e.color));
 
   return (
     <div
@@ -124,12 +117,12 @@ export default function Grid() {
         const clickedOnItem = items.find((item) =>
           item.positions.find((p) => p[0] === col && p[1] === row),
         );
-        if (clickedOnItem) setPickedId(clickedOnItem._id);
+        if (clickedOnItem) setPickedId(clickedOnItem.name);
         else {
           setItems((items) => {
             const newItems = [...items];
             newItems.map((e) => {
-              if (e._id === pickedId) {
+              if (e.name === pickedName) {
                 e.positions.push([col, row]);
               }
             });
@@ -140,7 +133,7 @@ export default function Grid() {
     >
       {compiledData().map((item, i) => (
         <div
-          key={`${item._id} - ${i}`}
+          key={`${item.name} - ${i}`}
           style={{
             gridColumn: `span ${item.colSpan} / span ${item.colSpan}`,
             gridRow: `span ${item.rowSpan} / span ${item.rowSpan}`,
@@ -148,7 +141,7 @@ export default function Grid() {
           }}
           className={cn("rounded-lg text-center pointer-events-none")}
         >
-          {item._id}
+          {item.name}
         </div>
       ))}
     </div>

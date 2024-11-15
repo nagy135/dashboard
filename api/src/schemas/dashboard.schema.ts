@@ -6,13 +6,12 @@ export type DashboardDocument = HydratedDocument<Dashboard>;
 @Schema()
 export class Dashboard {
   @Prop()
-  id: string;
-
-  @Prop()
-  color: string;
-
-  @Prop()
-  positions: number[][];
+  items: {
+    color: string;
+    name: string;
+    url: string;
+    positions: [number, number][];
+  }[];
 }
 
 export const DashboardSchema = SchemaFactory.createForClass(Dashboard);

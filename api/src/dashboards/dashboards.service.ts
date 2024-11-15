@@ -15,16 +15,22 @@ export class DashboardsService {
 
   async create() {
     return this.dashboardModel.create({
-      positions: [
-        [2, 2],
-        [2, 3],
-        [2, 1],
+      items: [
+        {
+          name: 'test',
+          url: 'https://www.google.com',
+          positions: [
+            [2, 2],
+            [2, 3],
+            [2, 1],
 
-        [4, 2],
-        [4, 3],
-        [4, 1],
+            [4, 2],
+            [4, 3],
+            [4, 1],
+          ],
+          color: 'red',
+        },
       ],
-      color: 'red',
     });
   }
 }
