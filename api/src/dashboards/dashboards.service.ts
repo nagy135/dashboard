@@ -18,27 +18,30 @@ export class DashboardsService {
     itemId: string,
     positions: [number, number][],
   ) {
-    return await this.dashboardModel.findOneAndUpdate(
-      { _id: id },
+    return this.dashboardModel.updateOne(
+      {
+        _id: new mongoose.mongo.ObjectId(id),
+      },
       {
         $set: {
-          items: {
-            $elemMatch: {
-              _id: itemId,
-              positions,
-            },
-          },
+          'items.$[item].positions': positions,
         },
+      },
+      {
+        arrayFilters: [
+          {
+            'item._id': new mongoose.mongo.ObjectId(itemId),
+          },
+        ],
       },
     );
   }
 
   async create() {
-    var newId = new mongoose.mongo.ObjectId();
     return this.dashboardModel.create({
       items: [
         {
-          _id: newId,
+          _id: new mongoose.mongo.ObjectId(),
           name: 'test',
           url: 'https://www.google.com',
           positions: [
@@ -51,6 +54,22 @@ export class DashboardsService {
             [4, 1],
           ],
           color: 'red',
+        },
+        {
+          _id: new mongoose.mongo.ObjectId(),
+          name: 'test2',
+          url: 'https://www.youtube.com',
+          positions: [
+            [3, 2],
+            [3, 3],
+            [3, 1],
+
+            [6, 6],
+            [6, 7],
+            [7, 6],
+            [7, 7],
+          ],
+          color: 'blue',
         },
       ],
     });

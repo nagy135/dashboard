@@ -7,6 +7,7 @@ export type DashboardDocument = HydratedDocument<Dashboard>;
 export class Dashboard {
   @Prop()
   items: {
+    _id: string;
     color: string;
     name: string;
     url: string;
