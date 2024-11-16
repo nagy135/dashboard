@@ -1,0 +1,19 @@
+### 
+# @name create-dashboard
+POST http://localhost:8080/dashboard
+Content-Type: application/json
+
+
+### 
+# @name get-dashboards
+GET http://localhost:8080/dashboard
+
+### 
+# @name create-dashboard
+POST http://localhost:8080/dashboard/6738ee9365392db08274ff8c/item/6738ee9365392db08274ff8a/positions
+Content-Type: application/json
+
+{
+  "positions": [ [1,2], [2,2]]
+}
+
