@@ -7,14 +7,18 @@ import { User } from 'src/schemas/user.schema';
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  getAll() {
-    return this.userModel.find().exec();
+  async getAll() {
+    return await this.userModel.find();
+  }
+
+  async findByUsername(username: string) {
+    return await this.userModel.findOne({ username });
   }
 
   async create() {
     return this.userModel.create({
-      name: 'test',
-      password: 123,
+      username: 'test',
+      password: '123',
     });
   }
 }
