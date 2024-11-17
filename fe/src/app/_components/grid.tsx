@@ -1,12 +1,13 @@
 "use client";
 
-import { getAllDashboards } from "@/api";
+import { getAllDashboards, updateDashboardItem } from "@/api";
 import { cn } from "@/utils";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useCallback, useEffect, useState } from "react";
 
 type Position = [number, number];
 type Item = {
+  _id: string;
   name: string;
   url: string;
   color: string;
@@ -83,8 +84,16 @@ const compileData = (
 export default function Grid() {
   const [pickedName, setPickedId] = useState<string | undefined>(undefined);
   const dashboardQuery = useQuery({
+    refetchOnWindowFocus: true,
     queryKey: ["dashboards"],
     queryFn: getAllDashboards,
+  });
+
+  const updateDashboardMutation = useMutation({
+    mutationFn: updateDashboardItem,
+    onSuccess: () => {
+      dashboardQuery.refetch();
+    },
   });
 
   const queryItems = dashboardQuery.data?.[0]?.items ?? [];
@@ -121,11 +130,21 @@ export default function Grid() {
         else {
           setItems((items) => {
             const newItems = [...items];
-            newItems.map((e) => {
+
+            var arrayIndex = -1;
+            newItems.map((e, i) => {
               if (e.name === pickedName) {
+                arrayIndex = i;
                 e.positions.push([col, row]);
               }
             });
+            if (arrayIndex !== -1) {
+              updateDashboardMutation.mutate({
+                dashboardId: dashboardQuery.data?.[0]?._id ?? "",
+                itemId: items[arrayIndex]._id,
+                positions: items[arrayIndex].positions,
+              });
+            }
             return newItems;
           });
         }
