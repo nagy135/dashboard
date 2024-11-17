@@ -1,17 +1,19 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @Get()
-  getDashboards() {
+  getUsers() {
     return this.userService.getAll();
   }
 
   @Post()
-  createDashboard() {
+  @UseGuards(AuthGuard)
+  create() {
     return this.userService.create();
   }
 }
