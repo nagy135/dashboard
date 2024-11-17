@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { AppService } from './app.service';
 import { UsersService } from './users/users.service';
 import { DashboardsService } from './dashboards/dashboards.service';
@@ -36,7 +36,7 @@ export class AppController {
     return this.dashboardService.create();
   }
 
-  @Post('dashboard/:id/item/:itemId/positions')
+  @Put('dashboard/:id/item/:itemId/positions')
   updatePositions(
     @Param('id') id: string,
     @Param('itemId') itemId: string,
