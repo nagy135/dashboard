@@ -1,14 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 import { UsersService } from './users/users.service';
-import { DashboardsService } from './dashboards/dashboards.service';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
     private readonly userService: UsersService,
-    private readonly dashboardService: DashboardsService,
   ) {}
 
   @Get()
@@ -24,24 +22,5 @@ export class AppController {
   @Post('users')
   createUser() {
     return this.userService.create();
-  }
-
-  @Get('dashboard')
-  getDashboards() {
-    return this.dashboardService.getAll();
-  }
-
-  @Post('dashboard')
-  createDashboard() {
-    return this.dashboardService.create();
-  }
-
-  @Put('dashboard/:id/item/:itemId/positions')
-  updatePositions(
-    @Param('id') id: string,
-    @Param('itemId') itemId: string,
-    @Body() body: any,
-  ) {
-    return this.dashboardService.updatePositions(id, itemId, body.positions);
   }
 }
