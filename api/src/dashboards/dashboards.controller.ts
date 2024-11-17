@@ -1,5 +1,14 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { DashboardsService } from './dashboards.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('dashboard')
 export class DashboardController {
@@ -11,6 +20,7 @@ export class DashboardController {
   }
 
   @Post()
+  @UseGuards(AuthGuard)
   createDashboard() {
     return this.dashboardService.create();
   }
