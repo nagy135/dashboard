@@ -13,14 +13,4 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
-
-  @Get('users')
-  getUsers() {
-    return this.userService.getAll();
-  }
-
-  @Post('users')
-  createUser() {
-    return this.userService.create();
-  }
 }
