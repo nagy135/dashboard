@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
+import { CreateDashboardDto } from 'src/dtos/create-dashboard-dto';
 import { Dashboard } from 'src/schemas/dashboard.schema';
 
 @Injectable()
@@ -39,42 +40,16 @@ export class DashboardsService {
     );
   }
 
-  async create(userId: string) {
+  async create(userId: string, createDashboardDto: CreateDashboardDto) {
     return this.dashboardModel.create({
       userId,
-      items: [
-        {
-          _id: new mongoose.mongo.ObjectId(),
-          name: 'test',
-          url: 'https://www.google.com',
-          positions: [
-            [2, 2],
-            [2, 3],
-            [2, 1],
-
-            [4, 2],
-            [4, 3],
-            [4, 1],
-          ],
-          color: 'red',
-        },
-        {
-          _id: new mongoose.mongo.ObjectId(),
-          name: 'test2',
-          url: 'https://www.youtube.com',
-          positions: [
-            [3, 2],
-            [3, 3],
-            [3, 1],
-
-            [6, 6],
-            [6, 7],
-            [7, 6],
-            [7, 7],
-          ],
-          color: 'blue',
-        },
-      ],
+      items: createDashboardDto.items.map((e) => ({
+        _id: new mongoose.mongo.ObjectId(),
+        name: e.name,
+        url: e.url,
+        color: e.color,
+        positions: e.positions,
+      })),
     });
   }
 }

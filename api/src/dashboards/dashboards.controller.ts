@@ -12,6 +12,7 @@ import { DashboardsService } from './dashboards.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { Dashboard } from 'src/schemas/dashboard.schema';
 import { RequestWithUser } from 'src/types';
+import { CreateDashboardDto } from 'src/dtos/create-dashboard-dto';
 
 @Controller('dashboard')
 export class DashboardController {
@@ -25,8 +26,11 @@ export class DashboardController {
 
   @Post()
   @UseGuards(AuthGuard)
-  createDashboard(@Request() req: RequestWithUser) {
-    return this.dashboardService.create(req.user.sub);
+  createDashboard(
+    @Request() req: RequestWithUser,
+    @Body() createDashboardDto: CreateDashboardDto,
+  ) {
+    return this.dashboardService.create(req.user.sub, createDashboardDto);
   }
 
   @Put('/:id/item/:itemId/positions')
