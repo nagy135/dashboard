@@ -1,6 +1,13 @@
 "use client";
 
 import { getAllDashboards, updateDashboardItem } from "@/api";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useCallback, useEffect, useState } from "react";
@@ -95,10 +102,14 @@ export default function Grid() {
       dashboardQuery.refetch();
     },
   });
+  const [selectedDashboard, setSelectedDashboard] = useState<number>(0);
 
-  const queryItems = dashboardQuery.data?.[0]?.items ?? [];
-
-  const [items, setItems] = useState<Item[]>(queryItems as Item[]);
+  const [items, setItems] = useState<Item[]>(
+    (dashboardQuery.data?.[selectedDashboard]?.items ?? []) as Item[],
+  );
+  useEffect(() => {
+    setItems((dashboardQuery.data?.[selectedDashboard]?.items ?? []) as Item[]);
+  }, [dashboardQuery.data, selectedDashboard]);
 
   const compiledData = useCallback(() => compileData(items ?? []), [items]);
 
@@ -107,62 +118,76 @@ export default function Grid() {
   }, [dashboardQuery.data]);
 
   return (
-    <div
-      className="p-2 grid grid-cols-10 grid-rows-10 gap-2 h-screen w-screen"
-      onClick={(e) => {
-        const target = e.target as HTMLElement;
-        const boundingRect = target.getBoundingClientRect();
-        const [x, y] = [
-          e.clientX - boundingRect.left,
-          e.clientY - boundingRect.top,
-        ];
-        const cellWidth = boundingRect.width / 10;
-        const cellHeight = boundingRect.height / 10;
-        const [col, row] = [
-          Math.floor(x / cellWidth),
-          Math.floor(y / cellHeight),
-        ];
+    <>
+      <Select onValueChange={(value) => setSelectedDashboard(Number(value))}>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Dashboard" />
+        </SelectTrigger>
+        <SelectContent>
+          {dashboardQuery.data?.map((dashboard, index) => (
+            <SelectItem key={index} value={index.toString()}>
+              {dashboard._id}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <div
+        className="p-2 grid grid-cols-10 grid-rows-10 gap-2 h-[95vh] w-screen bg-gray-100"
+        onClick={(e) => {
+          const target = e.target as HTMLElement;
+          const boundingRect = target.getBoundingClientRect();
+          const [x, y] = [
+            e.clientX - boundingRect.left,
+            e.clientY - boundingRect.top,
+          ];
+          const cellWidth = boundingRect.width / 10;
+          const cellHeight = boundingRect.height / 10;
+          const [col, row] = [
+            Math.floor(x / cellWidth),
+            Math.floor(y / cellHeight),
+          ];
 
-        const clickedOnItem = items.find((item) =>
-          item.positions.find((p) => p[0] === col && p[1] === row),
-        );
-        if (clickedOnItem) setPickedId(clickedOnItem.name);
-        else {
-          setItems((items) => {
-            const newItems = [...items];
+          const clickedOnItem = items.find((item) =>
+            item.positions.find((p) => p[0] === col && p[1] === row),
+          );
+          if (clickedOnItem) setPickedId(clickedOnItem.name);
+          else {
+            setItems((items) => {
+              const newItems = [...items];
 
-            var arrayIndex = -1;
-            newItems.map((e, i) => {
-              if (e.name === pickedName) {
-                arrayIndex = i;
-                e.positions.push([col, row]);
-              }
-            });
-            if (arrayIndex !== -1) {
-              updateDashboardMutation.mutate({
-                dashboardId: dashboardQuery.data?.[0]?._id ?? "",
-                itemId: items[arrayIndex]._id,
-                positions: items[arrayIndex].positions,
+              var arrayIndex = -1;
+              newItems.map((e, i) => {
+                if (e.name === pickedName) {
+                  arrayIndex = i;
+                  e.positions.push([col, row]);
+                }
               });
-            }
-            return newItems;
-          });
-        }
-      }}
-    >
-      {compiledData().map((item, i) => (
-        <div
-          key={`${item.name} - ${i}`}
-          style={{
-            gridColumn: `span ${item.colSpan} / span ${item.colSpan}`,
-            gridRow: `span ${item.rowSpan} / span ${item.rowSpan}`,
-            backgroundColor: item.color,
-          }}
-          className={cn("rounded-lg text-center pointer-events-none")}
-        >
-          {item.name}
-        </div>
-      ))}
-    </div>
+              if (arrayIndex !== -1) {
+                updateDashboardMutation.mutate({
+                  dashboardId: dashboardQuery.data?.[0]?._id ?? "",
+                  itemId: items[arrayIndex]._id,
+                  positions: items[arrayIndex].positions,
+                });
+              }
+              return newItems;
+            });
+          }
+        }}
+      >
+        {compiledData().map((item, i) => (
+          <div
+            key={`${item.name} - ${i}`}
+            style={{
+              gridColumn: `span ${item.colSpan} / span ${item.colSpan}`,
+              gridRow: `span ${item.rowSpan} / span ${item.rowSpan}`,
+              backgroundColor: item.color,
+            }}
+            className={cn("rounded-lg text-center pointer-events-none")}
+          >
+            {item.name}
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
