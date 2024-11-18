@@ -33,3 +33,9 @@ export async function login(state: FormState, formData: FormData) {
 
   redirect("/dashboard");
 }
+
+export async function logout() {
+  const cookiesStore = await cookies();
+  cookiesStore.delete("access_token");
+  redirect("/");
+}

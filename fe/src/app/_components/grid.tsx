@@ -11,6 +11,7 @@ import {
 import { cn } from "@/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useCallback, useEffect, useState } from "react";
+import { LogoutForm } from "../ui/logout-form";
 
 type Position = [number, number];
 type Item = {
@@ -119,18 +120,21 @@ export default function Grid({ accessToken }: { accessToken: string }) {
 
   return (
     <>
-      <Select onValueChange={(value) => setSelectedDashboard(Number(value))}>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Dashboard" />
-        </SelectTrigger>
-        <SelectContent>
-          {dashboardQuery.data?.map((dashboard, index) => (
-            <SelectItem key={index} value={index.toString()}>
-              {dashboard._id}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <div className="flex w-full justify-between p-2">
+        <Select onValueChange={(value) => setSelectedDashboard(Number(value))}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Dashboard" />
+          </SelectTrigger>
+          <SelectContent>
+            {dashboardQuery.data?.map((dashboard, index) => (
+              <SelectItem key={index} value={index.toString()}>
+                {dashboard._id}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <LogoutForm />
+      </div>
       <div
         className="p-2 grid grid-cols-10 grid-rows-10 gap-2 h-[95vh] w-screen bg-gray-100"
         onClick={(e) => {
