@@ -2,7 +2,23 @@
 # @name create-dashboard
 POST http://localhost:8080/dashboard
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJzdWIiOiI2NzNhMWNlYzNlMGM3YmIxMzE4NjE3YzMiLCJpYXQiOjE3MzE4NjQyNzUsImV4cCI6MTczMTg2NDMzNX0.GX3moIh4eUOUsnhRSIoY-JP4qOE_SsQB4aei-WJBSNs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiNjczYjEwYTk2YWM3MjY1MWNkZTE5MGUxIiwiaWF0IjoxNzMxOTI0NjQ1LCJleHAiOjE3MzE5MzA2NDV9.JziPmuwBvMdFTac0usOxRkWa5nk5IjgJ-jDKFu9u3to
+
+{
+  "items": [
+    {
+      "name": "test",
+      "url": "https://www.google.com",
+      "color": "navy",
+      "positions": [
+        [
+            2,
+            2
+        ]
+      ] 
+    }
+  ]
+}
 
 
 ### 
@@ -12,6 +28,7 @@ GET http://localhost:8080/users
 ### 
 # @name get-dashboards
 GET http://localhost:8080/dashboard
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiNjczYjEwYTk2YWM3MjY1MWNkZTE5MGUxIiwiaWF0IjoxNzMxOTI0NjQ1LCJleHAiOjE3MzE5MzA2NDV9.JziPmuwBvMdFTac0usOxRkWa5nk5IjgJ-jDKFu9u3to
 
 ### 
 # @name create-dashboard
