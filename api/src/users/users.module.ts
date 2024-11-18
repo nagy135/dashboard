@@ -1,11 +1,12 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/schemas/user.schema';
 import { UsersController } from './users.controller';
+import { UserMigrationService } from 'src/db/migrations/user';
 
 @Module({
-  providers: [UsersService],
+  providers: [UsersService, UserMigrationService],
   exports: [UsersService],
   controllers: [UsersController],
   imports: [
@@ -17,4 +18,9 @@ import { UsersController } from './users.controller';
     ]),
   ],
 })
-export class UsersModule {}
+export class UsersModule implements OnModuleInit {
+  constructor(private readonly userMigrationService: UserMigrationService) {}
+  onModuleInit() {
+    this.userMigrationService.runMigrations();
+  }
+}

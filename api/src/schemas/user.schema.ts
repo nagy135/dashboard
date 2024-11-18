@@ -3,6 +3,8 @@ import { HydratedDocument } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
+const latestMigraton = 0;
+
 @Schema()
 export class User {
   @Prop()
@@ -10,6 +12,9 @@ export class User {
 
   @Prop()
   password: string;
+
+  @Prop()
+  migrationsRan: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
