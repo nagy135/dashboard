@@ -88,12 +88,12 @@ const compileData = (
   return result;
 };
 
-export default function Grid() {
+export default function Grid({ accessToken }: { accessToken: string }) {
   const [pickedName, setPickedId] = useState<string | undefined>(undefined);
   const dashboardQuery = useQuery({
     refetchOnWindowFocus: true,
     queryKey: ["dashboards"],
-    queryFn: getAllDashboards,
+    queryFn: () => getAllDashboards(accessToken),
   });
 
   const updateDashboardMutation = useMutation({
@@ -114,8 +114,8 @@ export default function Grid() {
   const compiledData = useCallback(() => compileData(items ?? []), [items]);
 
   useEffect(() => {
-    setItems((dashboardQuery.data?.[0]?.items ?? []) as Item[]);
-  }, [dashboardQuery.data]);
+    setItems((dashboardQuery.data?.[selectedDashboard]?.items ?? []) as Item[]);
+  }, [dashboardQuery.data, selectedDashboard]);
 
   return (
     <>
@@ -164,9 +164,11 @@ export default function Grid() {
               });
               if (arrayIndex !== -1) {
                 updateDashboardMutation.mutate({
-                  dashboardId: dashboardQuery.data?.[0]?._id ?? "",
+                  dashboardId:
+                    dashboardQuery.data?.[selectedDashboard]?._id ?? "",
                   itemId: items[arrayIndex]._id,
                   positions: items[arrayIndex].positions,
+                  accessToken,
                 });
               }
               return newItems;
@@ -182,7 +184,9 @@ export default function Grid() {
               gridRow: `span ${item.rowSpan} / span ${item.rowSpan}`,
               backgroundColor: item.color,
             }}
-            className={cn("rounded-lg text-center pointer-events-none")}
+            className={cn(
+              "rounded-lg text-center pointer-events-none content-center",
+            )}
           >
             {item.name}
           </div>

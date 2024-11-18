@@ -1,20 +1,22 @@
+"use server";
+
 import { SignupFormSchema, FormState } from "@/app/lib/definitions";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function login(state: FormState, formData: FormData) {
-  // Validate form fields
   const validatedFields = SignupFormSchema.safeParse({
     name: formData.get("name"),
     password: formData.get("password"),
   });
 
-  // If any form fields are invalid, return early
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
     };
   }
 
-  const response = await fetch("http://localhost:8080/auth/login", {
+  const response = await fetch("http://backend:3000/auth/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -25,5 +27,9 @@ export async function login(state: FormState, formData: FormData) {
     }),
   });
   const body = await response.json();
-  return body.access_token;
+
+  const cookiesStore = await cookies();
+  cookiesStore.set("access_token", body.access_token);
+
+  redirect("/dashboard");
 }

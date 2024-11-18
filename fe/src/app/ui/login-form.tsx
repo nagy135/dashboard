@@ -8,8 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 export function LoginForm() {
-  const [state, action] = useActionState(login, undefined);
-  console.log("================\n", "state: ", state, "\n================");
+  const [accessToken, action] = useActionState(login, undefined);
 
   return (
     <div className="w-1/2 mx-auto">
@@ -23,7 +22,7 @@ export function LoginForm() {
             defaultValue={"admin"}
           />
         </div>
-        {state?.errors?.name && <p>{state.errors.name}</p>}
+        {accessToken?.errors?.name && <p>{accessToken.errors.name}</p>}
 
         <div>
           <Label htmlFor="password">Password</Label>
@@ -34,11 +33,11 @@ export function LoginForm() {
             defaultValue={"admin"}
           />
         </div>
-        {state?.errors?.password && (
+        {accessToken?.errors?.password && (
           <div>
             <p>Password must:</p>
             <ul>
-              {state.errors.password.map((error: any) => (
+              {accessToken.errors.password.map((error: any) => (
                 <li key={error}>- {error}</li>
               ))}
             </ul>

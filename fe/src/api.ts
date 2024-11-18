@@ -1,4 +1,6 @@
-export const getAllDashboards = async (): Promise<
+export const getAllDashboards = async (
+  accessToken: string,
+): Promise<
   {
     _id: string;
     items: {
@@ -11,8 +13,7 @@ export const getAllDashboards = async (): Promise<
   const res = await fetch("http://localhost:8080/dashboard", {
     method: "GET",
     headers: {
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiNjczYjFkNDgwY2FkYWIyMWRjZTIxOGZjIiwiaWF0IjoxNzMxOTMxMTczLCJleHAiOjE3MzE5MzcxNzN9.43FG13zSQgeRvXRORKuq0CMZ1wK54hIjqmbM9BYLAt4",
+      Authorization: `Bearer ${accessToken}`,
     },
   });
   return await res.json();
@@ -22,10 +23,12 @@ export const updateDashboardItem = async ({
   dashboardId,
   itemId,
   positions,
+  accessToken,
 }: {
   dashboardId: string;
   itemId: string;
   positions: [number, number][];
+  accessToken: string;
 }) => {
   const res = await fetch(
     `http://localhost:8080/dashboard/${dashboardId}/item/${itemId}/positions`,
@@ -33,6 +36,7 @@ export const updateDashboardItem = async ({
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({ positions }),
     },
