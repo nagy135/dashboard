@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Request,
   Get,
   Param,
   Post,
@@ -9,27 +10,31 @@ import {
 } from '@nestjs/common';
 import { DashboardsService } from './dashboards.service';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { Dashboard } from 'src/schemas/dashboard.schema';
+import { RequestWithUser } from 'src/types';
 
 @Controller('dashboard')
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardsService) {}
 
   @Get()
-  getDashboards() {
-    return this.dashboardService.getAll();
+  @UseGuards(AuthGuard)
+  getDashboards(@Request() req: RequestWithUser) {
+    return this.dashboardService.getAll(req.user.sub);
   }
 
   @Post()
   @UseGuards(AuthGuard)
-  createDashboard() {
-    return this.dashboardService.create();
+  createDashboard(@Request() req: RequestWithUser) {
+    return this.dashboardService.create(req.user.sub);
   }
 
   @Put('/:id/item/:itemId/positions')
+  @UseGuards(AuthGuard)
   updatePositions(
     @Param('id') id: string,
     @Param('itemId') itemId: string,
-    @Body() body: any,
+    @Body() body: { positions: Dashboard['items'][number]['positions'] },
   ) {
     return this.dashboardService.updatePositions(id, itemId, body.positions);
   }

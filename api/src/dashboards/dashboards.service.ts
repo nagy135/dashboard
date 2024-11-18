@@ -9,8 +9,10 @@ export class DashboardsService {
     @InjectModel(Dashboard.name) private dashboardModel: Model<Dashboard>,
   ) {}
 
-  getAll() {
-    return this.dashboardModel.find().exec();
+  async getAll(userId: string) {
+    return await this.dashboardModel
+      .find({ userId })
+      .populate('userId', 'username');
   }
 
   async updatePositions(
@@ -37,8 +39,9 @@ export class DashboardsService {
     );
   }
 
-  async create() {
+  async create(userId: string) {
     return this.dashboardModel.create({
+      userId,
       items: [
         {
           _id: new mongoose.mongo.ObjectId(),

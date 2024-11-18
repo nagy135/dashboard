@@ -2,7 +2,12 @@
 # @name create-dashboard
 POST http://localhost:8080/dashboard
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJzdWIiOiI2NzNhMWNlYzNlMGM3YmIxMzE4NjE3YzMiLCJpYXQiOjE3MzE4NjQyNzUsImV4cCI6MTczMTg2NDMzNX0.GX3moIh4eUOUsnhRSIoY-JP4qOE_SsQB4aei-WJBSNs
 
+
+### 
+# @name get-users
+GET http://localhost:8080/users
 
 ### 
 # @name get-dashboards
@@ -22,6 +27,7 @@ Content-Type: application/json
 # @name create-user
 POST http://localhost:8080/users
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJzdWIiOiI2NzNhMWNlYzNlMGM3YmIxMzE4NjE3YzMiLCJpYXQiOjE3MzE4NjQ4MTEsImV4cCI6MTczMTg2NDg3MX0.5MnIvePGTxRYvED8qFZxG6C5ZaWANpzBbNtGJL57Ukc
 
 ### 
 # @name login
@@ -29,7 +35,7 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "username": "test",
-  "password": "123"
+  "username": "admin",
+  "password": "admin"
 }
 
