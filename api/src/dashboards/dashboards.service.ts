@@ -45,10 +45,7 @@ export class DashboardsService {
       userId,
       items: createDashboardDto.items.map((e) => ({
         _id: new mongoose.mongo.ObjectId(),
-        name: e.name,
-        url: e.url,
-        color: e.color,
-        positions: e.positions,
+        ...e,
       })),
     });
   }

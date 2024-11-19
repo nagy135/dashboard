@@ -6,6 +6,7 @@ import {
   IsUrl,
   ValidateNested,
   ArrayMinSize,
+  IsOptional,
 } from 'class-validator';
 
 class DashboardItem {
@@ -17,6 +18,10 @@ class DashboardItem {
   @IsUrl()
   @IsNotEmpty()
   url: string;
+
+  @IsString()
+  @IsOptional()
+  icon?: string;
 
   @IsString()
   @IsNotEmpty()
