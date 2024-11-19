@@ -14,6 +14,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { LogoutForm } from "../ui/logout-form";
 import { useRouter } from "next/navigation";
 import * as Icons from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 type LucideIconType = keyof typeof Icons;
 
@@ -133,6 +134,7 @@ export default function Grid({ accessToken }: { accessToken: string }) {
   });
   const [selectedDashboard, setSelectedDashboard] = useState<number>(0);
 
+  const [editMode, setEditMode] = useState(false);
   const [items, setItems] = useState<Item[]>(
     (dashboardQuery.data?.[selectedDashboard]?.items ?? []) as Item[],
   );
@@ -149,18 +151,32 @@ export default function Grid({ accessToken }: { accessToken: string }) {
   return (
     <>
       <div className="flex w-full justify-between p-2">
-        <Select onValueChange={(value) => setSelectedDashboard(Number(value))}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Dashboard" />
-          </SelectTrigger>
-          <SelectContent>
-            {dashboardQuery.data?.map((dashboard, index) => (
-              <SelectItem key={index} value={index.toString()}>
-                {dashboard._id}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex space-x-2">
+          <Select
+            onValueChange={(value) => setSelectedDashboard(Number(value))}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Dashboard" />
+            </SelectTrigger>
+            <SelectContent>
+              {dashboardQuery.data?.map((dashboard, index) => (
+                <SelectItem key={index} value={index.toString()}>
+                  {dashboard._id}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button
+            className={cn(
+              editMode &&
+                "border border-green-500 bg-green-200 shadow-[0_0_30px_rgba(34,197,94,0.5)] hover:bg-green-400",
+            )}
+            onClick={() => setEditMode((e) => !e)}
+            variant={"outline"}
+          >
+            Edit
+          </Button>
+        </div>
         <LogoutForm />
       </div>
       <div
@@ -182,8 +198,13 @@ export default function Grid({ accessToken }: { accessToken: string }) {
           const clickedOnItem = items.find((item) =>
             item.positions.find((p) => p[0] === col && p[1] === row),
           );
-          if (clickedOnItem) setPickedId(clickedOnItem.name);
-          else {
+          if (clickedOnItem) {
+            if (editMode) {
+              setPickedId(clickedOnItem.name);
+            } else {
+              window.open(clickedOnItem.url, "_blank", "noopener,noreferrer");
+            }
+          } else {
             setItems((items) => {
               const newItems = [...items];
 
