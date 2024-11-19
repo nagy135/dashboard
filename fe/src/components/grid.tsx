@@ -11,7 +11,7 @@ import {
 import { cn } from "@/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useCallback, useEffect, useState } from "react";
-import { LogoutForm } from "../ui/logout-form";
+import { LogoutForm } from "../app/ui/logout-form";
 import { useRouter } from "next/navigation";
 import * as Icons from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -148,6 +148,14 @@ export default function Grid({ accessToken }: { accessToken: string }) {
   useEffect(() => {
     setItems((dashboardQuery.data?.[selectedDashboard]?.items ?? []) as Item[]);
   }, [dashboardQuery.data, selectedDashboard]);
+
+  console.log(
+    "================\n",
+    "dashboardQuery: ",
+    dashboardQuery.isSuccess,
+    "\n================",
+  );
+  if (!dashboardQuery.isSuccess) return null;
 
   return (
     <>

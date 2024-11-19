@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import Grid from "../_components/grid";
+import Grid from "../../components/grid";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
