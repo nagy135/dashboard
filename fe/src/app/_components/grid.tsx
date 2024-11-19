@@ -246,6 +246,8 @@ export default function Grid({ accessToken }: { accessToken: string }) {
               className={cn(
                 "rounded-lg text-center pointer-events-none content-center text-gray-50",
                 item.name && "border border-black",
+                editMode &&
+                  "relative before:content-['↖'] before:absolute before:top-0 before:left-0 after:content-['↗'] after:absolute after:top-0 after:right-0 [&>div:last-child]:before:content-['↙'] [&>div:last-child]:before:absolute [&>div:last-child]:before:bottom-0 [&>div:last-child]:before:left-0 [&>div:last-child]:after:content-['↘'] [&>div:last-child]:after:absolute [&>div:last-child]:after:bottom-0 [&>div:last-child]:after:right-0",
               )}
             >
               <div className="flex items-center justify-center">
