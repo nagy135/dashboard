@@ -11,8 +11,8 @@ export function LoginForm() {
   const [accessToken, action] = useActionState(login, undefined);
 
   return (
-    <div className="w-1/2 mx-auto">
-      <form action={action}>
+    <div className="w-4/5 md:w-1/2 mx-auto h-screen flex flex-row items-center">
+      <form action={action} className="w-full flex flex-col space-y-2">
         <div>
           <Label htmlFor="name">Name</Label>
           <Input
