@@ -13,6 +13,9 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useCallback, useEffect, useState } from "react";
 import { LogoutForm } from "../ui/logout-form";
 import { useRouter } from "next/navigation";
+import * as Icons from "lucide-react";
+
+type LucideIconType = keyof typeof Icons;
 
 type Position = [number, number];
 type Item = {
@@ -21,11 +24,18 @@ type Item = {
   url: string;
   color: string;
   positions: Position[];
+  icon?: string;
 };
 
 const compileData = (
   items: Item[],
-): { rowSpan: number; colSpan: number; name?: string; color: string }[] => {
+): {
+  rowSpan: number;
+  colSpan: number;
+  name?: string;
+  color: string;
+  icon?: string;
+}[] => {
   const indexes: (number | string | undefined)[][] = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -198,22 +208,31 @@ export default function Grid({ accessToken }: { accessToken: string }) {
           }
         }}
       >
-        {compiledData().map((item, i) => (
-          <div
-            key={`${item.name} - ${i}`}
-            style={{
-              gridColumn: `span ${item.colSpan} / span ${item.colSpan}`,
-              gridRow: `span ${item.rowSpan} / span ${item.rowSpan}`,
-              backgroundColor: item.color,
-            }}
-            className={cn(
-              "rounded-lg text-center pointer-events-none content-center text-gray-50",
-              item.name && "border border-black",
-            )}
-          >
-            {item.name}
-          </div>
-        ))}
+        {compiledData().map((item, i) => {
+          const iconName = item.icon as LucideIconType;
+          const Icon = (
+            item.icon && Icons[iconName] ? Icons[iconName] : Icons.Circle
+          ) as React.FC<React.SVGProps<SVGSVGElement>>;
+          return (
+            <div
+              key={`${item.name} - ${i}`}
+              style={{
+                gridColumn: `span ${item.colSpan} / span ${item.colSpan}`,
+                gridRow: `span ${item.rowSpan} / span ${item.rowSpan}`,
+                backgroundColor: item.color,
+              }}
+              className={cn(
+                "rounded-lg text-center pointer-events-none content-center text-gray-50",
+                item.name && "border border-black",
+              )}
+            >
+              <div className="flex items-center justify-center">
+                <Icon />
+                <div>{item.name}</div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </>
   );
