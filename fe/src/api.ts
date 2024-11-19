@@ -16,6 +16,10 @@ export const getAllDashboards = async (
       Authorization: `Bearer ${accessToken}`,
     },
   });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch dashboards");
+  }
   return await res.json();
 };
 

@@ -12,6 +12,7 @@ import { cn } from "@/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useCallback, useEffect, useState } from "react";
 import { LogoutForm } from "../ui/logout-form";
+import { useRouter } from "next/navigation";
 
 type Position = [number, number];
 type Item = {
@@ -101,12 +102,18 @@ const compileData = (
 };
 
 export default function Grid({ accessToken }: { accessToken: string }) {
+  const router = useRouter();
   const [pickedName, setPickedId] = useState<string | undefined>(undefined);
   const dashboardQuery = useQuery({
     refetchOnWindowFocus: true,
+    retry: false,
     queryKey: ["dashboards"],
     queryFn: () => getAllDashboards(accessToken),
   });
+
+  if (dashboardQuery.isError) {
+    router.push("/");
+  }
 
   const updateDashboardMutation = useMutation({
     mutationFn: updateDashboardItem,
