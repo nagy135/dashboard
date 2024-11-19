@@ -63,6 +63,17 @@ const compileData = (
           colSpan++;
         }
 
+        if (rowSpan > 1 || colSpan > 1) {
+          for (let i = rowSpan - 1; i > 0; i--) {
+            for (let j = colSpan - 1; j > 0; j--) {
+              if (indexes[y + i][x + j] !== current) {
+                j = colSpan - 1;
+                rowSpan -= 1;
+              }
+            }
+          }
+        }
+
         for (let i = 0; i < rowSpan; i++) {
           for (let j = 0; j < colSpan; j++) {
             indexes[y + i][x + j] = undefined;
@@ -189,7 +200,8 @@ export default function Grid({ accessToken }: { accessToken: string }) {
               backgroundColor: item.color,
             }}
             className={cn(
-              "rounded-lg text-center pointer-events-none content-center",
+              "rounded-lg text-center pointer-events-none content-center text-gray-50",
+              item.name && "border border-black",
             )}
           >
             {item.name}
