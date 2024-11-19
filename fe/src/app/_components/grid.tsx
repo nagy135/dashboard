@@ -52,6 +52,7 @@ const compileData = (
   for (const item of items) {
     for (const position of item.positions) {
       const [x, y] = position;
+      if (x > 9 || y > 9 || x < 0 || y < 0) continue;
       indexes[y][x] = item.name;
     }
   }
