@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 export function LoginForm() {
-  const [accessToken, action] = useActionState(login, undefined);
+  const [actionResult, action] = useActionState(login, undefined);
 
   return (
     <div className="w-4/5 md:w-1/2 mx-auto h-screen flex flex-row items-center">
@@ -22,7 +22,7 @@ export function LoginForm() {
             defaultValue={"admin"}
           />
         </div>
-        {accessToken?.errors?.name && <p>{accessToken.errors.name}</p>}
+        {actionResult?.errors?.name && <p>{actionResult.errors.name}</p>}
 
         <div>
           <Label htmlFor="password">Password</Label>
@@ -33,11 +33,11 @@ export function LoginForm() {
             defaultValue={"admin"}
           />
         </div>
-        {accessToken?.errors?.password && (
+        {actionResult?.errors?.password && (
           <div>
             <p>Password must:</p>
             <ul>
-              {accessToken.errors.password.map((error: any) => (
+              {actionResult.errors.password.map((error: any) => (
                 <li key={error}>- {error}</li>
               ))}
             </ul>
