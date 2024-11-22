@@ -15,6 +15,7 @@ import { LogoutForm } from "../app/ui/logout-form";
 import { useRouter } from "next/navigation";
 import * as Icons from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "./ui/spinner";
 
 type LucideIconType = keyof typeof Icons;
 
@@ -77,11 +78,12 @@ const compileData = (
         }
 
         if (rowSpan > 1 || colSpan > 1) {
-          for (let i = rowSpan - 1; i > 0; i--) {
+          outer: for (let i = rowSpan - 1; i > 0; i--) {
             for (let j = colSpan - 1; j > 0; j--) {
               if (indexes[y + i][x + j] !== current) {
                 j = colSpan - 1;
-                rowSpan -= 1;
+                rowSpan = i;
+                continue outer;
               }
             }
           }
@@ -145,17 +147,12 @@ export default function Grid({ accessToken }: { accessToken: string }) {
 
   const compiledData = useCallback(() => compileData(items ?? []), [items]);
 
-  useEffect(() => {
-    setItems((dashboardQuery.data?.[selectedDashboard]?.items ?? []) as Item[]);
-  }, [dashboardQuery.data, selectedDashboard]);
-
-  console.log(
-    "================\n",
-    "dashboardQuery: ",
-    dashboardQuery.isSuccess,
-    "\n================",
-  );
-  if (!dashboardQuery.isSuccess) return null;
+  if (!dashboardQuery.isSuccess)
+    return (
+      <div className="flex justify-center h-screen w-screen">
+        <Spinner size={"xxlarge"} />
+      </div>
+    );
 
   return (
     <>
@@ -255,7 +252,8 @@ export default function Grid({ accessToken }: { accessToken: string }) {
                 "rounded-lg text-center pointer-events-none content-center text-gray-50",
                 item.name && "border border-black",
                 editMode &&
-                  "relative before:content-['↖'] before:absolute before:top-0 before:left-0 after:content-['↗'] after:absolute after:top-0 after:right-0 [&>div:last-child]:before:content-['↙'] [&>div:last-child]:before:absolute [&>div:last-child]:before:bottom-0 [&>div:last-child]:before:left-0 [&>div:last-child]:after:content-['↘'] [&>div:last-child]:after:absolute [&>div:last-child]:after:bottom-0 [&>div:last-child]:after:right-0",
+                  item.name &&
+                  "relative before:content-['↖'] before:absolute before:top-0 before:left-0 before:text-2xl before:text-black before:font-bold after:content-['↗'] after:absolute after:top-0 after:right-0 after:text-2xl after:text-black after:font-bold [&>div:last-child]:before:content-['↙'] [&>div:last-child]:before:absolute [&>div:last-child]:before:bottom-0 [&>div:last-child]:before:left-0 [&>div:last-child]:before:text-2xl [&>div:last-child]:before:text-black [&>div:last-child]:before:font-bold [&>div:last-child]:after:content-['↘'] [&>div:last-child]:after:absolute [&>div:last-child]:after:bottom-0 [&>div:last-child]:after:right-0 [&>div:last-child]:after:text-2xl [&>div:last-child]:after:text-black [&>div:last-child]:after:font-bold",
               )}
             >
               <div className="flex items-center justify-center">
