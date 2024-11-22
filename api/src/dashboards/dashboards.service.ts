@@ -32,6 +32,21 @@ export class DashboardsService {
     );
   }
 
+  async deleteItem(id: string, itemId: string) {
+    return this.dashboardModel.updateOne(
+      {
+        _id: new mongoose.mongo.ObjectId(id),
+      },
+      {
+        $pull: {
+          items: {
+            _id: new mongoose.mongo.ObjectId(itemId),
+          },
+        },
+      },
+    );
+  }
+
   async updatePositions(
     id: string,
     itemId: string,

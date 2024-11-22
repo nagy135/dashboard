@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { DashboardsService } from './dashboards.service';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -40,6 +41,12 @@ export class DashboardController {
     @Body() body: Dashboard['items'][number],
   ) {
     return this.dashboardService.createItem(id, body);
+  }
+
+  @Delete('/:id/item/:itemId')
+  @UseGuards(AuthGuard)
+  deleteItem(@Param('id') id: string, @Param('itemId') itemId: string) {
+    return this.dashboardService.deleteItem(id, itemId);
   }
 
   @Put('/:id/item/:itemId/positions')
