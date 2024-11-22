@@ -16,6 +16,22 @@ export class DashboardsService {
       .populate('userId', 'username');
   }
 
+  async createItem(id: string, item: Dashboard['items'][number]) {
+    return this.dashboardModel.updateOne(
+      {
+        _id: new mongoose.mongo.ObjectId(id),
+      },
+      {
+        $push: {
+          items: {
+            _id: new mongoose.mongo.ObjectId(),
+            ...item,
+          },
+        },
+      },
+    );
+  }
+
   async updatePositions(
     id: string,
     itemId: string,

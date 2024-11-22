@@ -33,6 +33,15 @@ export class DashboardController {
     return this.dashboardService.create(req.user.sub, createDashboardDto);
   }
 
+  @Post('/:id/item')
+  @UseGuards(AuthGuard)
+  createItem(
+    @Param('id') id: string,
+    @Body() body: Dashboard['items'][number],
+  ) {
+    return this.dashboardService.createItem(id, body);
+  }
+
   @Put('/:id/item/:itemId/positions')
   @UseGuards(AuthGuard)
   updatePositions(
