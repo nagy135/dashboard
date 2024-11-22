@@ -2,7 +2,7 @@
 # @name create-dashboard
 POST http://localhost:8080/dashboard
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiNjczYjMxMWUwMTllZTQxMjY5MTQwZmY1IiwiaWF0IjoxNzMyMDIyMDA5LCJleHAiOjE3MzIwMjgwMDl9.wH9KtY6z42X_VAPUvEDlzSsq94dCri_75pw3hguXX1Q
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiNjczZTBkOTkyNmM1ZWM2ZDY2OTAzYWZmIiwiaWF0IjoxNzMyMTIwMDEzLCJleHAiOjE3MzIxMjYwMTN9.nuRZqMHhGO2hm_0rybZISlILkcMnEHEF1-4bvcUvbG0
 
 {
   "items": [
@@ -10,7 +10,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkb
       "name": "test2",
       "url": "https://www.google.com",
       "color": "#bbccee",
-      "icon": "FacebookIcon",
+      "icon": "GoogleIcon",
       "positions": [
         [
             7,
@@ -19,6 +19,29 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkb
       ] 
     }
   ]
+}
+
+### 
+# @name create-item-in-dashboard
+POST http://localhost:8080/dashboard/673e10afdc36087c84bf72e6/item
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiNjczZTBkOTkyNmM1ZWM2ZDY2OTAzYWZmIiwiaWF0IjoxNzMyMTIwMDEzLCJleHAiOjE3MzIxMjYwMTN9.nuRZqMHhGO2hm_0rybZISlILkcMnEHEF1-4bvcUvbG0
+
+{
+  "name": "facebook",
+  "url": "https://www.facebook.com",
+  "color": "#aa12ab",
+  "icon": "FacebookIcon",
+  "positions": [
+    [
+        2,
+        2
+    ],
+    [
+        3,
+        2
+    ]
+  ] 
 }
 
 
@@ -30,16 +53,6 @@ GET http://localhost:8080/users
 # @name get-dashboards
 GET http://localhost:8080/dashboard
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiNjczYjMxMWUwMTllZTQxMjY5MTQwZmY1IiwiaWF0IjoxNzMyMDIyMDA5LCJleHAiOjE3MzIwMjgwMDl9.wH9KtY6z42X_VAPUvEDlzSsq94dCri_75pw3hguXX1Q
-
-### 
-# @name create-dashboard
-POST http://localhost:8080/dashboard/6738ee9365392db08274ff8c/item/6738ee9365392db08274ff8a/positions
-Content-Type: application/json
-
-{
-  "positions": [ [1,2], [2,2]]
-}
-
 
 ### 
 # @name create-user
