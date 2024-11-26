@@ -249,13 +249,24 @@ export default function Grid({ accessToken }: { accessToken: string }) {
                 backgroundColor: item.color,
               }}
               className={cn(
-                "rounded-lg text-center pointer-events-none content-center text-gray-50",
+                "relative rounded-lg text-center pointer-events-none content-center text-gray-50",
                 item.name && "border border-black",
                 editMode &&
                   item.name &&
                   "relative before:content-['↖'] before:absolute before:top-0 before:left-0 before:text-2xl before:text-black before:font-bold after:content-['↗'] after:absolute after:top-0 after:right-0 after:text-2xl after:text-black after:font-bold [&>div:last-child]:before:content-['↙'] [&>div:last-child]:before:absolute [&>div:last-child]:before:bottom-0 [&>div:last-child]:before:left-0 [&>div:last-child]:before:text-2xl [&>div:last-child]:before:text-black [&>div:last-child]:before:font-bold [&>div:last-child]:after:content-['↘'] [&>div:last-child]:after:absolute [&>div:last-child]:after:bottom-0 [&>div:last-child]:after:right-0 [&>div:last-child]:after:text-2xl [&>div:last-child]:after:text-black [&>div:last-child]:after:font-bold",
               )}
             >
+              {item.name && editMode && (
+                <Button
+                  variant={"destructive"}
+                  className="absolute top-1 right-1"
+                  onClick={(e) => {
+                    console.log("delete");
+                  }}
+                >
+                  <Icons.Trash2 />
+                </Button>
+              )}
               <div className="flex items-center justify-center">
                 <Icon />
                 <div>{item.name}</div>
